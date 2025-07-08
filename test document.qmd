@@ -1,8 +1,16 @@
+---
+title: "test document"
+format: html
+---
+
+```{r}
 library(httr)
 library(jsonlite)
 library(tidyverse)
+```
 
-## setting base url
+```{r}
+# setting base url
 url_base = "https://api.openf1.org/v1/"
 
 ## creating api call
@@ -24,7 +32,10 @@ get_f1_data = function(endpoint = "car_data", options = list()) {
 #test_df = get_f1_data(endpoint = "position", options = list(driver_number = 23 , session_key = "latest"))
 #head(test_df)
 
+```
 
+
+```{r}
 ## making different endpoints
 
 # car data
@@ -68,6 +79,10 @@ get_finish_data = function(driver = NULL, sesh_key = NULL, meet_key = NULL, date
 }
 
 
+#test to see if modified base call works 
+get_position_data(55, NULL, NULL, "2025-07-05")
+
+
 # get meeting key based on date
 get_meeting_key = function(date2) {
   date1 = get_f1_data("meetings", list(date_start = date2))
@@ -99,6 +114,14 @@ get_session_key = function(date2) {
 
 
 
+```
+
+
+
+
+```{r}
+get_meeting_key("2023-09-15")
+```
 
 
 
@@ -108,16 +131,13 @@ get_session_key = function(date2) {
 
 
 
-#test to see if modified base call works 
-get_position_data(55, NULL, NULL, "2025-07-05")
 
 
 
-contingency_driver_stint <- function(df) {
-  df %>% count(driver_number, stint_number)
-}
 
-contingency_driver_stint(get_stint_data(NULL, "latest"))
+
+
+
 
 
 
