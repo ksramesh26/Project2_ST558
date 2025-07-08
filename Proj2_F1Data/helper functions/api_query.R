@@ -21,7 +21,7 @@ get_f1_data = function(endpoint = "car_data", options = list()) {
 }
 
 #Testing to see if api call works
-#test_df = get_f1_data(endpoint = "position", options = list(driver_number = 23 , session_key = "latest"))
+#test_df = get_f1_data(endpoint = "car_data", options = list(driver_number = 23 , session_key = "latest"))
 #head(test_df)
 
 
