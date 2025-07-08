@@ -75,16 +75,6 @@ get_incident_data = function(driver = NULL, sesh_key = NULL, meet_key = NULL, da
 
 
 
-
-
-
-
-
-
-
-
-
-
 # get meeting key based on date
 get_meeting_key = function(date2) {
   date1 = get_f1_data("meetings", list(date_start = date2))
@@ -100,8 +90,8 @@ get_meeting_key = function(date2) {
 }
 
 # get session key based on date
-get_session_key = function(date2) {
-  date1 = get_f1_data("sessions", list(date_start = date2))
+get_session_key = function(meet_key) {
+  sessions = get_f1_data("sessions", list(meeting_key = meet_key))
   
   
   if(nrow(date1) == 0){
