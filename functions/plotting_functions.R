@@ -33,17 +33,16 @@ plot_lap_duration_by_lap_number = function(driver_numbers, session_key) {
 
 
 ## Heatmap of compound usage per driver 
-plot_compound_usage_heatmap = function(meeting_key1 = NULL, sesh_key = NULL) {
+plot_compound_usage_heatmap = function(sesh_key = NULL) {
   
   ## get lap data
-  laps_df = get_f1_data("laps", list(meeting_key = meeting_key1, session_key = sesh_key))
+  laps_df = get_f1_data("laps", list( session_key = sesh_key))
   
   ## get stint data (contains compound info)
-  stints_df = get_f1_data("stints", list(meeting_key = meeting_key1, session_key = sesh_key))
+  stints_df = get_f1_data("stints", list(session_key = sesh_key))
   
   ## expand stint laps to assign compound to each lap
   stints_expanded = stints_df %>%
-    filter(!is.na(lap_start), !is.na(lap_end)) %>%
     mutate(lap_number_in_stint = purrr::map2(lap_start, lap_end, seq)) %>%
     tidyr::unnest(lap_number_in_stint) %>%
     select(driver_number, lap_number_in_stint, compound)
@@ -105,27 +104,33 @@ plot_lap_stddev_all_drivers = function(session_key) {
 ## Plot gap to leader over session
 plot_gap_to_leader = function(driver_numbers, session_key) {
   
-  # Get interval data
-  interval_df = get_f1_data("intervals", list(session_key = session_key)) %>%
+  interval_df = get_f1_data("intervals", list(session_key = session_key))
+  
+  if (!all(c("driver_number", "gap_to_leader", "date") %in% names(interval_df))) {
+    return(ggplot() + ggtitle("Required columns not found in intervals data"))
+  }
+  
+  interval_df = interval_df %>%
     filter(!is.na(gap_to_leader), driver_number %in% driver_numbers) %>%
     mutate(
       driver_number = as.character(driver_number),
+      gap_to_leader = as.numeric(gsub("s", "", gap_to_leader)),
       time = as.POSIXct(date, format = "%Y-%m-%dT%H:%M:%OS", tz = "UTC")
     ) %>%
     arrange(driver_number, time)
   
-  
-  # Plot
   ggplot(interval_df, aes(x = time, y = gap_to_leader, color = driver_number)) +
     geom_line(size = 1) +
     labs(
-      title = "Gap to Leader",
+      title = "Gap to Leader Over Time",
       x = "Time (UTC)",
       y = "Gap to Leader (seconds)",
       color = "Driver"
     ) +
     theme_minimal()
 }
+
+
 
 
 

@@ -511,22 +511,26 @@ plot_lap_stddev_all_drivers(session_key = "latest")
 
 ```{r}
 plot_gap_to_leader = function(driver_numbers, session_key) {
-  
-  # Get interval data
-  interval_df = get_f1_data("intervals", list(session_key = session_key)) %>%
+
+  interval_df = get_f1_data("intervals", list(session_key = session_key))
+
+  if (!all(c("driver_number", "gap_to_leader", "date") %in% names(interval_df))) {
+    return(ggplot() + ggtitle("Required columns not found in intervals data"))
+  }
+
+  interval_df = interval_df %>%
     filter(!is.na(gap_to_leader), driver_number %in% driver_numbers) %>%
     mutate(
       driver_number = as.character(driver_number),
+      gap_to_leader = as.numeric(gsub("s", "", gap_to_leader)),
       time = as.POSIXct(date, format = "%Y-%m-%dT%H:%M:%OS", tz = "UTC")
     ) %>%
     arrange(driver_number, time)
-  
-  
-  # Plot
+
   ggplot(interval_df, aes(x = time, y = gap_to_leader, color = driver_number)) +
     geom_line(size = 1) +
     labs(
-      title = "Gap to Leader",
+      title = "Gap to Leader Over Time",
       x = "Time (UTC)",
       y = "Gap to Leader (seconds)",
       color = "Driver"
@@ -534,9 +538,45 @@ plot_gap_to_leader = function(driver_numbers, session_key) {
     theme_minimal()
 }
 
-plot_gap_to_leader(driver_numbers = c(1, 44), session_key = 9165)
+plot_gap_to_leader(c(44, 1, 55), 9947)
 
+```
 
+```{r}
+tire_usage_by_session = function(meeting_key1) {
+  
+  #get stint data
+  df = get_f1_data("stints", list(meeting_key = meeting_key1))
+  
+  #force integer and get sessino names
+  sessions = get_f1_data("sessions", list(meeting_key = meeting_key1)) %>%
+    select(session_key, session_name) %>%
+    mutate(session_key = as.integer(session_key))
+  
+  #for stint as integer
+  filtered_stints <- df %>%
+    mutate(session_key = as.integer(session_key))
+  
+  #merge sets for session name
+  merged_data <- left_join(filtered_stints, sessions, by = "session_key")
+  
+  #filter and organize data 
+  tire_contingency = merged_data %>%
+    filter(!is.na(compound), !is.na(session_key)) %>%
+    count(compound, session_key) %>%
+    pivot_wider(
+      names_from = session_name,
+      values_from = n,
+      values_fill = 0
+    ) %>%
+    arrange(compound)
+  
+  return(tire_contingency)
+}
+
+stint_length_by_driver(1219)
+
+plot_gap_to_leader(c(55, 1), 9947)
 ```
 
 

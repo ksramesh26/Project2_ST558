@@ -24,8 +24,8 @@ tire_usage_by_session = function(meeting_key1) {
   
   #filter and organize data 
   tire_contingency = merged_data %>%
-    filter(!is.na(compound), !is.na(session_key)) %>%
-    count(compound, session_key) %>%
+    filter(!is.na(compound), !is.na(session_name)) %>%
+    count(compound, session_name) %>%
     pivot_wider(
       names_from = session_name,
       values_from = n,
@@ -158,14 +158,14 @@ lap_duration_by_driver = function(meeting_key1 = NULL, sesh_key = NULL) {
   
   #create summary table of lap duration statistics
   lap_summary = df %>%
-    filter(!is.na(driver_number), !is.na(duration)) %>%
+    filter(!is.na(driver_number), !is.na(lap_duration)) %>%
     group_by(driver_number) %>%
     summarise(
-      avg_lap = mean(duration, na.rm = TRUE),
-      median_lap = median(duration, na.rm = TRUE),
-      max_lap = max(duration, na.rm = TRUE),
-      min_lap = min(duration, na.rm = TRUE),
-      sd_lap = sd(duration, na.rm = TRUE),
+      avg_lap = mean(lap_duration, na.rm = TRUE),
+      median_lap = median(lap_duration, na.rm = TRUE),
+      max_lap = max(lap_duration, na.rm = TRUE),
+      min_lap = min(lap_duration, na.rm = TRUE),
+      sd_lap = sd(lap_duration, na.rm = TRUE),
       count = n()
     ) %>%
     mutate(driver_number = as.character(driver_number)) %>%
