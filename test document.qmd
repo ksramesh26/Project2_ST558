@@ -343,14 +343,89 @@ lap_duration_by_compound = function(meeting_key1 = NULL, sesh_key = NULL) {
 
 ```
 
+```{r}
+plot_lap_summary_by_compound = function(meeting_key1 = NULL, sesh_key = NULL) {
+  
+  ##get lap data
+  laps_df = get_f1_data("laps", list(meeting_key = meeting_key1, session_key = sesh_key))
+  
+  ## get stint data
+  stints_df = get_f1_data("stints", list(meeting_key = meeting_key1, session_key = sesh_key))
+  
+  ##expand so compoud per lap is available
+  stints_expanded = stints_df %>%
+    filter(!is.na(lap_start), !is.na(lap_end)) %>%
+    mutate(lap_number_in_stint = map2(lap_start, lap_end, seq)) %>%
+    unnest(lap_number_in_stint) %>% 
+    select(driver_number, lap_number_in_stint, compound)
+  
+  
+  ##join compound info with laps
+  laps_with_compound = left_join(
+    laps_df,stints_expanded, by = c("driver_number", "lap_number" = "lap_number_in_stint")
+    )
+  
+  
+  #create summary table of lap duration statistics by compound
+  lap_summary = laps_with_compound %>%
+    filter(!is.na(compound), !is.na(lap_duration)) %>%
+    group_by(compound) %>%
+    summarise(
+      avg_lap = mean(lap_duration, na.rm = TRUE),
+      median_lap = median(lap_duration, na.rm = TRUE),
+      max_lap = max(lap_duration, na.rm = TRUE),
+      min_lap = min(lap_duration, na.rm = TRUE),
+      sd_lap = sd(lap_duration, na.rm = TRUE),
+      count = n()
+    ) %>%
+    arrange(compound)
+  
+  ggplot(lap_summary, aes(x = compound, y = min_lap, fill = compound)) +
+    geom_col(position = "dodge") +
+    labs(
+      title = "Average Lap Duration by Compound",
+      x = "Tire Compound",
+      y = "Average Lap Duration (s)"
+    ) +
+    theme_minimal()
+}
+```
+
+
 
 ```{r}
-lap_duration_by_compound(NULL,9165)
-stint_length_by_compound(NULL,9165)
+plot_lap_duration_by_lap_number = function(driver_numbers, session_key) {
+  
+  ## get lap data for the selected session
+  laps_df = get_f1_data("laps", list(session_key = session_key))
+  
+  ## filter for selected drivers
+  driver_laps = laps_df %>%
+    filter(driver_number %in% driver_numbers, !is.na(lap_number), !is.na(lap_duration)) %>%
+    mutate(driver_number = as.character(driver_number))  #coloring
+  
+  ## create  plot
+  
+  
+  ggplot(driver_laps, 
+         aes(x = lap_number,
+             y = lap_duration,
+             color = driver_number,
+             group = driver_number
+             )) +
+    geom_line(size = 1) +
+    geom_point(size = 1) +
+    labs(
+      title = "Lap Duration by Lap Number",
+      x = "Lap Number",
+      y = "Lap Duration (seconds)",
+      color = "Driver"
+    ) +
+    theme_minimal()
+}
 
 
-df = get_f1_data("laps", list(meeting_key = NULL, session_key = 9165))
-
+plot_lap_duration_by_lap_number(driver_numbers = c(1, 63), session_key = 9165)
 
 
 ```
