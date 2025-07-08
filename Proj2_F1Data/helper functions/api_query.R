@@ -67,6 +67,23 @@ get_finish_data = function(driver = NULL, sesh_key = NULL, meet_key = NULL, date
   get_f1_data("session_result", list(driver_number = driver, session_key = sesh_key, meeting_key = meet_key, date = date1))
 }
 
+# Race Control indicents
+get_incident_data = function(driver = NULL, sesh_key = NULL, meet_key = NULL, date1 = NULL) {
+  get_f1_data("race_control", list(driver_number = driver, session_key = sesh_key, meeting_key = meet_key, date = date1))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # get meeting key based on date
 get_meeting_key = function(date2) {
@@ -97,27 +114,6 @@ get_session_key = function(date2) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-#test to see if modified base call works 
-get_position_data(55, NULL, NULL, "2025-07-05")
-
-
-
-contingency_driver_stint <- function(df) {
-  df %>% count(driver_number, stint_number)
-}
-
-contingency_driver_stint(get_stint_data(NULL, "latest"))
 
 
 

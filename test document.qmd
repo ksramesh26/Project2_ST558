@@ -83,6 +83,13 @@ get_finish_data = function(driver = NULL, sesh_key = NULL, meet_key = NULL, date
 get_position_data(55, NULL, NULL, "2025-07-05")
 
 
+
+
+```
+
+
+```{r}
+
 # get meeting key based on date
 get_meeting_key = function(date2) {
   date1 = get_f1_data("meetings", list(date_start = date2))
@@ -112,18 +119,57 @@ get_session_key = function(date2) {
 }
 
 
-
-
 ```
 
+
+```{r}
+
+tire_usage_by_session = function(meeting_key1) {
+  
+  
+  df = get_f1_data("stints", list(meeting_key = meeting_key1))
+  
+  sessions = get_f1_data("sessions", list(meeting_key = meeting_key1)) %>%
+    select(session_key, session_name)
+  
+  df1 = left_join(df, sessions, by = "session_key")
+  
+  #filter and organize data 
+  tire_contingency = df %>%
+    filter(!is.na(compound), !is.na(session_key)) %>%
+    count(compound, session_key) %>%
+    pivot_wider(
+      names_from = session_name,
+      values_from = n,
+      values_fill = 0
+    ) %>%
+    arrange(compound)
+
+  return(tire_contingency)
+}
+
+```
 
 
 
 ```{r}
-get_meeting_key("2023-09-15")
+
+df <- get_f1_data("stints", list(meeting_key = 1216))
+names(df)
+
+tire = tire_usage_by_session(1219)
+tire
 ```
 
 
+```{r}
+get_f1_data("sessions", list(meeting_key = 1219)) %>% names()
+
+```
+```{r}
+sessions = get_f1_data("sessions", list(meeting_key = 1219)) %>%
+    select(session_key, session_name)
+```
 
 
 
