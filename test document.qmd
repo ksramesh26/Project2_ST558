@@ -539,10 +539,6 @@ plot_gap_to_leader(driver_numbers = c(1, 44), session_key = 9165)
 
 ```
 
-```{r}
-plot_compound_usage_heatmap(meeting_key1 = 1219, sesh_key = 9165)
-```
-
 
 
 

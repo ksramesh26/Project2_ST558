@@ -94,13 +94,13 @@ get_session_key = function(meet_key) {
   sessions = get_f1_data("sessions", list(meeting_key = meet_key))
   
   
-  if(nrow(date1) == 0){
+  if(nrow(sessions) == 0){
     print("No sessions found for given date")
     return(NULL)
   } 
   
   
-  return(date1$meeting_key)
+  return(sessions$session_key)
 }
 
 
