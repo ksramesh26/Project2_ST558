@@ -32,5 +32,7 @@ To install all necessary packages in one step, run:
 install.packages(c("shiny", "tidyverse", "httr", "jsonlite"))
 
 
+# Run the App
+
 shiny::runGitHub("OpenF1-Shiny-App", "ksramesh26")
 
