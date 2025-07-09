@@ -99,6 +99,12 @@ stints_by_driver_session = function(meeting_key1) {
 }
 
 
+
+
+
+
+
+
 ### Numerical summaries of quantitative variables for categorical variables
 
 ##Summary stats for stint length by driver
@@ -110,7 +116,6 @@ stint_length_by_driver = function(meeting_key1 = NULL, sesh_key = NULL) {
   
   #create summary table of stint summary statistics
   stint_summary = df %>%
-    filter(!is.na(driver_number), !is.na(stint_length)) %>%
     group_by(driver_number) %>%
     summarise(
       avg_stint = mean(stint_length, na.rm = TRUE),

@@ -580,6 +580,18 @@ plot_gap_to_leader(c(55, 1), 9947)
 ```
 
 
+```{r}
+
+stint_length_by_driver = function(meeting_key1 = NULL, sesh_key = NULL) {
+  df = get_f1_data("stints", list(meeting_key = meeting_key1, session_key = sesh_key))
+  print(names(df))  # <--- Add this line to check the column names
+}
+stint_length_by_driver(1219, 9947)
+
+
+df = get_f1_data("stints", list(meeting_key = 1219, session_key = NULL))
+df
+```
 
 
 
