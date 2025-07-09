@@ -16,6 +16,10 @@ This shiny app allows users to explore historical formula 1 data though interact
 
 "WARNING: Not all data is able to be used for data exploration plots"
 
+
+** A good sample date to use for testing is 7/6/2025 **
+
+
 ## Required R Packages
 
 The following packages are required to run the app:
