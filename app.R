@@ -1,4 +1,7 @@
-
+library(shiny)
+library(httr)
+library(jsonlite)
+library(tidyverse)
 
 
 ## load external r scrips for api access and generating summaries
@@ -46,7 +49,7 @@ ui <- dashboardPage(
                     tags$li("Download F1 session data"),
                     tags$li("Summarize performance metrics"),
                     tags$li("Create custom plots"),
-                    tags$li("WARNING:Not all data is able to used for a plot")
+                    tags$li("WARNING: Not all data is able to be used for data exploration plots")
                   )
                 ),
                 box(
