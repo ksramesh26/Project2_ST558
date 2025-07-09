@@ -34,5 +34,5 @@ install.packages(c("shiny", "tidyverse", "httr", "jsonlite"))
 
 # Run the App
 
-shiny::runGitHub("OpenF1-Shiny-App", "ksramesh26")
+shiny::runGitHub("Project2_ST558", "ksramesh26")
 
