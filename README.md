@@ -37,9 +37,13 @@ To install all necessary packages, run:
 install.packages(c("shiny", "shinydashboard", "tidyverse", "httr", "jsonlite"))
 
 library(shiny)
+
 library(shinydashboard)
+
 library(tidyverse)
+
 library(httr)
+
 library(jsonlite)
 
 # Run the App
