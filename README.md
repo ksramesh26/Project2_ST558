@@ -29,7 +29,7 @@ The following packages are required to run the app:
 
 To install all necessary packages in one step, run:
 
-install.packages(c("shiny", "tidyverse", "httr", "jsonlite"))
+install.packages(c("shiny", "shinydashboard", "tidyverse", "httr", "jsonlite"))
 
 
 # Run the App
